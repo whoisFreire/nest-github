@@ -1,5 +1,5 @@
-import { Repo } from '../interfaces/repo.interface';
-import { User } from '../interfaces/user.interface';
+import { Repo } from '../../../application/entities/repo';
+import { User } from '../../../application/entities/user';
 
 export class RepoInfoViewModel {
   static toHTTP(rawRepo: Repo, user: User) {

@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { User } from './interfaces/user.interface';
-import { Repo } from './interfaces/repo.interface';
+import { User } from '../../application/entities/user';
+import { Repo } from '../../application/entities/repo';
 
 @Injectable()
 export class GithubService {
@@ -18,22 +18,37 @@ export class GithubService {
         return data;
       }
     } catch (err) {
-      throw new Error(err);
+      throw new NotFoundException('Invalid user');
     }
   }
 
   async getUserRepos(username: string) {
-    let repo: Repo[] = [];
     try {
       const { status, data } = await lastValueFrom(
         this.httpService.get<Repo[]>(`${this.baseURL}/${username}/repos`),
       );
-      if (status === HttpStatus.OK) {
-        repo = data;
+      if (status === HttpStatus.OK && data.length > 0) {
+        return data;
       }
-      return repo;
+      throw new NotFoundException('Invalid user');
     } catch (err) {
-      throw new Error(err);
+      throw new NotFoundException('Invalid user');
+    }
+  }
+
+  async getUserReposFilter(username: string, filter: string) {
+    try {
+      const { status, data } = await lastValueFrom(
+        this.httpService.get<Repo[]>(
+          `${this.baseURL}/${username}/repos?${filter}`,
+        ),
+      );
+      if (status === HttpStatus.OK && data.length > 0) {
+        return data;
+      }
+      throw new NotFoundException('Invalid user');
+    } catch (err) {
+      throw new NotFoundException('Invalid user');
     }
   }
 }

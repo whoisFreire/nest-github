@@ -1,4 +1,4 @@
-import { User } from '../interfaces/user.interface';
+import { User } from '../../../application/entities/user';
 
 export class UserInfoViewModel {
   static toHTTP(rawUser: User) {
