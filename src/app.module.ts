@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GithubModule } from './infra/github/github.module';
 
 @Module({
-  imports: [GithubModule],
+  imports: [ConfigModule.forRoot(), GithubModule],
   controllers: [],
   providers: [],
 })

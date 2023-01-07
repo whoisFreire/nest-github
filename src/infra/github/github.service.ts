@@ -7,7 +7,7 @@ import { Repo } from '../../application/entities/repo';
 @Injectable()
 export class GithubService {
   constructor(private readonly httpService: HttpService) {}
-  private baseURL = 'https://api.github.com/users';
+  private baseURL = process.env.BASE_URL;
 
   async getUserInfo(username: string) {
     try {
