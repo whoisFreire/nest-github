@@ -3,9 +3,10 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { User } from '../../application/entities/user';
 import { Repo } from '../../application/entities/repo';
+import { GithubServiceInterface } from './interfaces/githubService.interface';
 
 @Injectable()
-export class GithubService {
+export class GithubService implements GithubServiceInterface {
   constructor(private readonly httpService: HttpService) {}
   private baseURL = process.env.BASE_URL;
 

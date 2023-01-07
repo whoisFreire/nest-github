@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { GithubService } from '../github.service';
 import { Repo } from '../../../application/entities/repo';
 import { RepoInfoViewModel } from '../viewModels/repo-info-view-model';
 import { UserInfoViewModel } from '../viewModels/user-info-view-model';
+import { GithubServiceInterface } from '../interfaces/githubService.interface';
 
 interface GetRepoRequest {
   username: string;
@@ -10,7 +10,7 @@ interface GetRepoRequest {
 
 @Injectable()
 export class GetRepoUseCase {
-  constructor(private readonly githubService: GithubService) {}
+  constructor(private readonly githubService: GithubServiceInterface) {}
 
   async execute(request: GetRepoRequest) {
     const { username } = request;

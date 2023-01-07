@@ -1,4 +1,4 @@
-import { Repo } from 'src/infra/github/interfaces/repo.interface';
+import { Repo } from '../../src/application/entities/repo';
 import { userFactory } from './userFactory';
 
 export function repoFactory(): Repo {

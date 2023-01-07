@@ -1,4 +1,4 @@
-import { User } from 'src/infra/github/interfaces/user.interface';
+import { User } from '../../src/application/entities/user';
 
 export function userFactory(username?: string): User {
   return {

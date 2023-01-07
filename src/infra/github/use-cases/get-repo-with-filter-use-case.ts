@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { transformQuerys } from 'src/helpers/transformQuerys';
-import { GithubService } from '../github.service';
 import { Repo } from '../../../application/entities/repo';
 import { RepoInfoViewModel } from '../viewModels/repo-info-view-model';
 import { UserInfoViewModel } from '../viewModels/user-info-view-model';
+import { GithubServiceInterface } from '../interfaces/githubService.interface';
 
 interface GetRepoWithFilterRequest {
   username: string;
@@ -12,7 +12,7 @@ interface GetRepoWithFilterRequest {
 
 @Injectable()
 export class GetRepoWithFilterUseCase {
-  constructor(private readonly githubService: GithubService) {}
+  constructor(private readonly githubService: GithubServiceInterface) {}
   async execute(request: GetRepoWithFilterRequest) {
     const { username, filter } = request;
     const stringFilter = transformQuerys(filter);

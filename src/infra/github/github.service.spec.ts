@@ -2,10 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GithubService } from './github.service';
 import { of, throwError } from 'rxjs';
-import { User } from './interfaces/user.interface';
+import { User } from '../../application/entities/user';
 import { userFactory } from '../../../test/factories/userFactory';
 import { repoFactory } from '../../../test/factories/repoFactory';
-import { Repo } from './interfaces/repo.interface';
+import { Repo } from '../../application/entities/repo';
+import { NotFoundException } from '@nestjs/common';
 describe('GithubService', () => {
   let githubService: GithubService;
   let httpService: HttpService;
@@ -66,8 +67,8 @@ describe('GithubService', () => {
     it('should be able to return an error if the return is not success', async () => {
       jest
         .spyOn(httpService, 'get')
-        .mockReturnValueOnce(throwError(() => new Error())),
-        expect(githubService.getUserInfo('test')).rejects.toThrowError();
+        .mockReturnValueOnce(throwError(() => new NotFoundException()));
+      expect(githubService.getUserInfo('test')).rejects.toThrowError();
     });
   });
 
@@ -87,8 +88,24 @@ describe('GithubService', () => {
     it('should be able to return an error if the return is not success', async () => {
       jest
         .spyOn(httpService, 'get')
-        .mockReturnValueOnce(throwError(() => new Error())),
-        expect(githubService.getUserRepos('test')).rejects.toThrowError();
+        .mockReturnValueOnce(throwError(() => new NotFoundException()));
+      expect(githubService.getUserRepos('test')).rejects.toThrowError();
+    });
+  });
+
+  describe('GetUserReposFilter', () => {
+    it('should be able to return the user repo list filtered by query successfully', async () => {
+      const expected: Repo[] = [repoFactory()];
+
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(
+        of({
+          status: 200,
+          statusText: 'OK',
+          config: {},
+          headers: {},
+          data: expected,
+        }),
+      );
     });
   });
 });
