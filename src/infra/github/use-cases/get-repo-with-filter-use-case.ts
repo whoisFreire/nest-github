@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { transformQuerys } from 'src/helpers/transformQuerys';
+import { transformQuerys } from '../../../helpers/transformQuerys';
 import { Repo } from '../../../application/entities/repo';
 import { RepoInfoViewModel } from '../viewModels/repo-info-view-model';
 import { UserInfoViewModel } from '../viewModels/user-info-view-model';

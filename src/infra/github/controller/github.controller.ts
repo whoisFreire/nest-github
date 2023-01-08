@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GithubQuerySearch } from '../querys/github-query-search';
+import { GithubQuerySearch } from '../swagger/querys/github-query-search';
 import { GetReposSwagger } from '../swagger/get-repos-swagger';
 import { GetUserSwagger } from '../swagger/get-user-swagger';
 import { NotFoundSwagger } from '../swagger/not-found-swagger';

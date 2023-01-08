@@ -50,25 +50,15 @@ describe('GithubService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should be able to returns undefined if not found', async () => {
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(
-        of({
-          status: 204,
-          statusText: 'NO CONTENT',
-          config: {},
-          headers: {},
-          data: [],
-        }),
-      );
-      const result = await githubService.getUserInfo('teste');
-      expect(result).toBeUndefined();
-    });
-
-    it('should be able to return an error if the return is not success', async () => {
+    it('should be able to return error if not found', async () => {
       jest
         .spyOn(httpService, 'get')
-        .mockReturnValueOnce(throwError(() => new NotFoundException()));
-      expect(githubService.getUserInfo('test')).rejects.toThrowError();
+        .mockReturnValueOnce(
+          throwError(() => new NotFoundException('Invalid user')),
+        );
+      expect(() => githubService.getUserInfo('teste')).rejects.toThrow(
+        new NotFoundException('Invalid user'),
+      );
     });
   });
 
@@ -85,11 +75,38 @@ describe('GithubService', () => {
       expect(result).toEqual(data);
     });
 
-    it('should be able to return an error if the return is not success', async () => {
-      jest
-        .spyOn(httpService, 'get')
-        .mockReturnValueOnce(throwError(() => new NotFoundException()));
-      expect(githubService.getUserRepos('test')).rejects.toThrowError();
+    it('should be able to return an error if the status code equal 204', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(
+        of({
+          status: 204,
+          statusText: 'NO CONTENT',
+          config: {},
+          headers: {},
+          data: [],
+        }),
+      );
+
+      expect(githubService.getUserRepos('test')).rejects.toThrowError(
+        'Invalid user',
+      );
+      expect(httpService.get).toBeCalledTimes(1);
+    });
+
+    it('should be able to return an error if the status code equal 200 but the data content is empty', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(
+        of({
+          status: 200,
+          statusText: 'OK',
+          config: {},
+          headers: {},
+          data: [],
+        }),
+      );
+
+      expect(githubService.getUserRepos('test')).rejects.toThrowError(
+        'Invalid user',
+      );
+      expect(httpService.get).toBeCalledTimes(1);
     });
   });
 
@@ -106,6 +123,43 @@ describe('GithubService', () => {
           data: expected,
         }),
       );
+      const result: Repo[] = await githubService.getUserReposFilter(
+        'test',
+        'test',
+      );
+      expect(expected).toEqual(result);
+    });
+
+    it('should be able to return an error if the status code equal 204', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(
+        of({
+          status: 204,
+          statusText: 'NO CONTENT',
+          config: {},
+          headers: {},
+          data: [],
+        }),
+      );
+      expect(
+        githubService.getUserReposFilter('test', 'teste'),
+      ).rejects.toThrowError('Invalid user');
+      expect(httpService.get).toBeCalledTimes(1);
+    });
+
+    it('should be able to return an error if the status code equal 200 but data content is empty', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(
+        of({
+          status: 200,
+          statusText: 'OK',
+          config: {},
+          headers: {},
+          data: [],
+        }),
+      );
+      expect(
+        githubService.getUserReposFilter('test', 'teste'),
+      ).rejects.toThrowError('Invalid user');
+      expect(httpService.get).toBeCalledTimes(1);
     });
   });
 });

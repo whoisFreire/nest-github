@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/application/entities/user';
+import { User } from '../../../application/entities/user';
 
 export class GetUserSwagger {
   @ApiProperty()
